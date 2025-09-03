@@ -1,0 +1,39 @@
+{
+  "name": "@tigerbeetle/deno-port",
+  "version": "0.1.0",
+  "exports": "./src/index.ts",
+  "tasks": {
+    "dev": "deno run --allow-net --watch examples/basic-usage.ts",
+    "test": "deno run --allow-all tests/runner.ts",
+    "test:unit": "deno test --allow-net --allow-read --allow-env tests/unit/test.ts",
+    "test:comprehensive": "deno test --allow-net --allow-read --allow-env tests/comprehensive/comprehensive_test.ts",
+    "test:edge-cases": "deno test --allow-net --allow-read --allow-env tests/edge-cases/edge_case_test.ts",
+    "test:nodejs-scenarios": "deno test --allow-net --allow-read --allow-env tests/nodejs-compat/nodejs_scenarios_test.ts",
+    "test:performance": "deno test --allow-net --allow-read --allow-env tests/performance/performance_test.ts",
+    "test:functional": "deno test --allow-net --allow-read --allow-env tests/integration/functional_test.ts",
+    "test:functional:remote": "TB_INTEGRATION_TESTS=1 TB_TEST_HOST=10.10.50.50 TB_TEST_PORT=3306 TB_TEST_DB=tigerbeetle TB_TEST_USER=tigerbeetle TB_TEST_PASSWORD=tigerbeetle deno test --allow-net --allow-read --allow-env tests/integration/functional_test.ts",
+    "test:integration": "TB_INTEGRATION_TESTS=1 deno test --allow-net --allow-read --allow-env tests/integration/integration_test.ts",
+    "test:integration:remote": "TB_INTEGRATION_TESTS=1 TB_TEST_HOST=10.10.50.50 TB_TEST_PORT=3306 TB_TEST_DB=tigerbeetle TB_TEST_USER=tigerbeetle TB_TEST_PASSWORD=tigerbeetle deno test --allow-net --allow-read --allow-env tests/integration/integration_test.ts",
+    "test:integration:fresh": "deno task db:reset:remote && deno task test:integration:remote",
+    "test:fresh:remote": "deno task db:reset:remote && deno task test:unit && deno task test:functional:remote && deno task test:integration:remote",
+    "test:functional:turso": "TIGERBEETLE_DB_TYPE=turso deno test --allow-net --allow-read --allow-env tests/integration/functional_test.ts",
+    "test:integration:turso": "TIGERBEETLE_DB_TYPE=turso deno test --allow-net --allow-read --allow-env tests/integration/integration_test.ts",
+    "test:turso:demo": "TB_INTEGRATION_TESTS=1 TIGERBEETLE_DB_TYPE=turso deno test --allow-all tests/integration/turso_demo_test.ts",
+    "test:turso:cloud": "TB_INTEGRATION_TESTS=1 TIGERBEETLE_DB_TYPE=turso deno test --allow-all --allow-run tests/integration/turso_cloud_integration_test.ts",
+    "test:all:turso": "TIGERBEETLE_DB_TYPE=turso deno run --allow-all tests/runner.ts --verbose",
+    "test:matrix": "deno task test:unit && echo '=== MySQL Tests ===' && deno task test:functional:remote && deno task test:integration:remote && echo '=== Turso Tests (require TURSO_DATABASE_URL and TURSO_AUTH_TOKEN) ===' && deno task test:functional:turso && deno task test:integration:turso",
+    "test:all": "deno run --allow-all tests/runner.ts --verbose",
+    "test:help": "deno run --allow-all tests/runner.ts --help",
+    "db:reset": "deno run --allow-net --allow-env scripts/db-reset.ts",
+    "db:reset:remote": "TB_TEST_HOST=10.10.50.50 TB_TEST_PORT=3306 TB_TEST_DB=tigerbeetle TB_TEST_USER=tigerbeetle TB_TEST_PASSWORD=tigerbeetle deno run --allow-net --allow-env scripts/db-reset.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1.0.0",
+    "@std/crypto": "jsr:@std/crypto@1.0.0",
+    "@libsql/client": "npm:@libsql/client@^0.14.0"
+  },
+  "compilerOptions": {
+    "strict": true,
+    "exactOptionalPropertyTypes": true
+  }
+}
